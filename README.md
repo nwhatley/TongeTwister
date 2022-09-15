@@ -1,2 +1,2 @@
 # TongeTwister
-Language Learning Tool for CS-361
+Language Learning Tool for CS-362
