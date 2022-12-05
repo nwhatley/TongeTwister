@@ -20,6 +20,53 @@ def parser(user_text, language):
 
     return parsed_text
 
+def print_nice(info_dump):
+    """Prints nicely the data from info_reader"""
+    top_string = "Parsed Sentence\n"
+
+    for word in info_dump:
+        top_string += word + " "
+        bottom_string = ""
+    #print(top_string)
+    #print("\n")
+
+    for key in info_dump:
+
+        output = key
+
+        if len(info_dump[key]) == 4:
+            output = output + " from ->" + info_dump[key][1] + " " + info_dump[key][2] + " " + info_dump[key][3]
+            #Word + from original, part of speech, + features
+        # need to add support for à here
+
+        bottom_string += '\n' +  output
+
+    return top_string + '\n' + bottom_string
+
+def result_generator(info_dump):
+    """Creates from info_dumps the result sentence with color formatting hopefully"""
+
+    resultlist = list()
+
+    for word in info_dump:
+
+        if len(info_dump[word]) == 4:
+            color = ''
+            if info_dump[word][2] == 'NOUN':
+                color = 'red'
+            elif info_dump[word][2] == 'VERB':
+                color = 'green'
+            elif info_dump[word][2] == 'PRON':
+                color = 'blue'
+
+            colortuple = (word, color)
+            resultlist.append(colortuple)
+
+        else:
+            colortuple = (word)
+            resultlist.append(colortuple)
+
+    return resultlist
 
 def info_reader(doc_diction):
     """Reads through a Document and extracts info needed for user"""
@@ -47,9 +94,10 @@ def info_reader(doc_diction):
                 infotuple = (id['id'], id['start_char'], id['end_char'],)
 
             info[id['text']] = infotuple
-            print(id['text'])
+            #print(id['text'])
     # Testing here
-    print(info)
+    #print(type(info))
+    return info
 
 
 
@@ -58,9 +106,9 @@ def info_reader(doc_diction):
 #es_nlp = stanza.Pipeline('es',download_method=None)
 
 
-test = parser('Celci est une contrôle', 'fr')
-info_reader(test)
-
+#test = parser('je vous presente notre projet en classe', 'fr')
+#word = info_reader(test)
+#print_nice(word)
 
 #nlp = stanza.Pipeline(lang='fr', processors='tokenize,mwt,pos,lemma',download_method=None)
 #doc = nlp("Je serai à la plage")
