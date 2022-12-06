@@ -26,10 +26,14 @@ def submit():
     result_var.set(output)
     print(result_generator(word))
     result(result_generator(word))
+    textWindow.delete("1.0", "end")
     textWindow.insert(tk.INSERT, result_var.get())
 
 def result(resultlist):
     """Does a thing"""
+
+    for widget in resultFrame.winfo_children():
+        widget.destroy()
 
     x = 0
     for item in resultlist:
@@ -121,7 +125,7 @@ resultFrame = ttk.LabelFrame(frame1, text="Result")
 resultFrame.place(x= 10, y = 250)
 
 rawFrame = ttk.LabelFrame(frame1, text="Annotations")
-rawFrame.place(x= 550, y = 20)
+rawFrame.place(x= 545, y = 20)
 
 moreFrame = ttk.LabelFrame(frame1, text ="More Options")
 moreFrame.place(x= 650, y = 400)
