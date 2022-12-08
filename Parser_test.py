@@ -23,7 +23,11 @@ def parser(user_text, language):
 def print_nice(info_dump):
     """Prints nicely the data from info_reader"""
     top_string = "Parsed Sentence\n"
+    if type(info_dump) == None:
+        return "No Text Entered"
 
+    elif len(info_dump) == 0:
+        bottom_string = ""
     for word in info_dump:
         top_string += word + " "
         bottom_string = ""
@@ -39,7 +43,26 @@ def print_nice(info_dump):
             #Word + from original, part of speech, + features
         # need to add support for à here
 
-        bottom_string += '\n' +  output
+        #bottom_string += '\n' +  output
+
+        elif len(info_dump[key]) == 3 and info_dump[key][2] == 'X':
+            output =  output + " -> <Unknown Word>"
+
+        elif len(info_dump[key]) == 3 and info_dump[key][2] == 'ADP':
+            output = output + "-> ADP"
+
+        elif len(info_dump[key]) == 3 and info_dump[key][2] == 'CCONJ':
+            output = output + "-> CCONJ"
+        elif len(info_dump[key]) == 3 and info_dump[key][2] == 'SCONJ':
+            output = output + "-> SCONJ"
+        elif len(info_dump[key]) == 3 and info_dump[key][2] == 'ADV':
+            output = output + "-> ADV"
+
+
+        elif len(info_dump[key]) == 3 and info_dump[key][2] == 'INTJ':
+            output = output + "-> INTJ"
+
+        bottom_string += '\n' + output
 
     return top_string + '\n' + bottom_string
 
@@ -58,12 +81,19 @@ def result_generator(info_dump):
                 color = 'green'
             elif info_dump[word][2] == 'PRON':
                 color = 'blue'
+            elif info_dump[word][2] == 'ADJ':
+                color = 'cyan'
+            elif info_dump[word][2] == 'AUX':
+                color = 'green2'
 
             colortuple = (word, color)
             resultlist.append(colortuple)
 
         else:
-            colortuple = (word)
+            if info_dump[word][2] == 'CCONJ':
+                color = 'grey'
+
+            colortuple = (word, "")
             resultlist.append(colortuple)
 
     return resultlist

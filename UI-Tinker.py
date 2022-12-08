@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from Parser_test import *
+import time
 
 
 # root window
@@ -11,19 +12,34 @@ style = ttk.Style(root)
 
 sentence_var = tk.StringVar()
 result_var = tk.StringVar()
+language_var = tk.StringVar()
+
+selected_language = tk.StringVar()
+
+selected_language = 'en'
+
+def sel():
+    global selected_language
+    selected_language = language_var.get()
+    #print(selected_language)
 
 def submit():
     """test for now"""
     sentence = sentence_var.get()
-    #print(sentence)
-    test = parser(sentence, 'fr')
+    global selected_language
 
+
+    start_time = time.time()
+    test = parser(sentence, selected_language)
+    time_taken = time.time() - start_time
     word = info_reader(test)
-    #print(word)
-    output = print_nice(word)
+    print(word)
 
-    #print(output)
+    output = print_nice(word)
+    output += "\n" + ("--- %s seconds ---" % (time_taken))
+
     result_var.set(output)
+
     print(result_generator(word))
     result(result_generator(word))
     textWindow.delete("1.0", "end")
@@ -119,13 +135,13 @@ frame4.pack(fill=tk.BOTH, side=tk.LEFT, expand=True)
 
 # Testing stuff with Frames
 entryFrame = ttk.LabelFrame(frame1, text="Sentence Entry")
-entryFrame.place(x= 10, y = 20)
+entryFrame.place(x= 10, y = 18)
 
 resultFrame = ttk.LabelFrame(frame1, text="Result")
 resultFrame.place(x= 10, y = 250)
 
 rawFrame = ttk.LabelFrame(frame1, text="Annotations")
-rawFrame.place(x= 545, y = 20)
+rawFrame.place(x= 500, y = 25)
 
 moreFrame = ttk.LabelFrame(frame1, text ="More Options")
 moreFrame.place(x= 650, y = 400)
@@ -133,7 +149,7 @@ moreFrame.place(x= 650, y = 400)
 #resultLabel = tk.Label(resultFrame, text="~~~~~~Placeholder~~~~~~")
 #resultLabel.grid(column=0, row= 0, padx=50, pady= 20)
 
-textWindow = tk.Text(rawFrame, height = 10, width = 53)
+textWindow = tk.Text(rawFrame, height = 14, width = 58)
 textWindow.grid(column=0, row=0, padx=8, pady=8)
 
 textWindow.insert(tk.INSERT, result_var.get())
@@ -142,13 +158,25 @@ frameEntry = tk.Entry(entryFrame, textvariable = sentence_var, width=65)
 frameEntry.grid(column=0, row=0, padx=20, pady= 18)
 
 goButton = tk.Button(entryFrame, text="Go", command= submit,  width=8)
-goButton.grid(column=3, row=0, padx= 10, pady = 10)
+goButton.grid(column=0, row=1, padx= 10, pady = 10,sticky=tk.E)
 
-translateButton = tk.Button(moreFrame, text="Translate This", width=10)
+instructLabel = tk.Label(entryFrame, text="Select a language then Press Go ->")
+instructLabel.grid(column=0, row=1, padx=5, pady=5)
+
+frButton = tk.Radiobutton(entryFrame, text="French", variable=language_var, value='fr', command=sel,indicatoron=0).grid(column=0,sticky=tk.W, row=3, padx=5, pady=5)
+enButton = tk.Radiobutton(entryFrame, text="English",variable=language_var,value='en',command=sel, indicatoron=0).grid(column=0, row=2,sticky=tk.W, padx=5, pady=5)
+esButton = tk.Radiobutton(entryFrame, text="Spanish",variable=language_var,value='es', command=sel,indicatoron=0).grid(column=0, row=4,sticky=tk.W, padx =5, pady=5)
+
+translateButton = tk.Button(moreFrame, text="Info", width=10)
 translateButton.grid(column=1, row=0, padx= 10, pady = 10)
 
 saveButton = tk.Button(moreFrame, text="Save This", width=8)
 saveButton.grid(column=2, row=0, padx= 10, pady = 10)
+
+exitButton = tk.Button(moreFrame, text="Exit", width=8, command=root.destroy)
+exitButton.grid(column=3, row=0, padx= 10, pady = 10)
+
+
 # Label Creation
 # Header
 lbl = tk.Label(frame1, text="Parsing Page")
@@ -158,8 +186,8 @@ lbl.pack()
 # add frames to notebook
 
 notebook.add(frame1, text='Sentence Parsing')
-notebook.add(frame2, text='Translating')
-notebook.add(frame3, text='Vocab')
+notebook.add(frame2, text='Coming Soon')
+notebook.add(frame3, text='Info')
 
 notebook.add(frame4, text='Settings')
 
